@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Icon from "./img/bird.png";
 
 const bird_size = 60;
-const game_space_width = 500;
+const game_space_width = 700;
 const game_space_height = 500;
 const gravity = 5;
 const jump_height = 100;
@@ -60,6 +60,7 @@ function App() {
        (hasCollideTopObstacle || hasCollideBottomObstacle)
      ) {
        setGameStarted(false);
+       setScore((score) => score-2)
      }
    },[birdPosition, obstacleHeight, bottomObstacleHeight, obstacleLeft])
    
@@ -92,7 +93,7 @@ function App() {
         />
         <Bird size={bird_size} top = {birdPosition} src={Icon}/>
       </GameBox>
-      <span> { score } </span>
+      <span> { score - 1  } </span>
     </Div>
 
   );
@@ -114,8 +115,9 @@ const Div = styled.div`
   justify-content: center;
   & span {
     color: white;
-    font-size: 24px;
+    font-size: 40px;
     position: absolute;
+    font-weight: 600;
   }
 `;
 
