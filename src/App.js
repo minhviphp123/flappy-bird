@@ -1,9 +1,8 @@
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import Icon from "./img/bird.png";
 
-const bird_size = 60;
-const game_space_width = 700;
+const bird_size = 20;
+const game_space_width = 500;
 const game_space_height = 500;
 const gravity = 5;
 const jump_height = 100;
@@ -15,16 +14,22 @@ function App() {
    const [gameStarted, setGameStarted] = useState(false);
    const [obstacleHeight, setObstacleHeight] = useState(0)  ;
    const [obstacleLeft, setObstacleLeft] = useState(game_space_width - obstacle_width);
-   const [score, setScore] = useState(0);
+   const [score, setScore] = useState(-1);
    const bottomObstacleHeight = game_space_height - obstacle_gap - obstacleHeight
   
-  // falling
+  // bird falling
    useEffect(() => {
      let timeId;
      if(gameStarted && birdPosition < game_space_height - bird_size){
         timeId = setInterval(() => {
          setBirdPosition(birdPosition => birdPosition + gravity)
        }, 24)
+     }
+
+     if(birdPosition === game_space_height - bird_size) {
+       setGameStarted(false);
+       window.location.reload();
+       alert('play again!');
      }
 
   return () => {
@@ -46,7 +51,7 @@ function App() {
      } else {
        setObstacleLeft(game_space_width - obstacle_width)
        setObstacleHeight(Math.floor(Math.random() * (game_space_height - obstacle_gap)));
-       setScore((score) => score + 1)
+       setScore(score => score + 1)
      }
    },[gameStarted, obstacleLeft]);
 
@@ -60,11 +65,13 @@ function App() {
        (hasCollideTopObstacle || hasCollideBottomObstacle)
      ) {
        setGameStarted(false);
-       setScore((score) => score-2)
+       alert('play again!');
+       window.location.reload();
+
      }
    },[birdPosition, obstacleHeight, bottomObstacleHeight, obstacleLeft])
    
-  // jump
+  //  bird jump
    const handleClick = () => {
     let newBirdPosition = birdPosition - jump_height;
     if(!gameStarted) {
@@ -91,9 +98,9 @@ function App() {
           height={bottomObstacleHeight}
           left={obstacleLeft}
         />
-        <Bird size={bird_size} top = {birdPosition} src={Icon}/>
+        <Bird size={bird_size} top = {birdPosition}/>
       </GameBox>
-      <span> { score - 1  } </span>
+      <span> {score - 1} </span>
     </Div>
 
   );
@@ -101,8 +108,9 @@ function App() {
 
 export default App;
 
-const Bird = styled.img`
+const Bird = styled.div`
   position: absolute;
+  background-color: yellow;
   height: ${(props) => props.size}px;
   width: ${(props) => props.size}px;
   top: ${(props) => props.top}px;
@@ -115,9 +123,8 @@ const Div = styled.div`
   justify-content: center;
   & span {
     color: white;
-    font-size: 40px;
+    font-size: 24px;
     position: absolute;
-    font-weight: 600;
   }
 `;
 
